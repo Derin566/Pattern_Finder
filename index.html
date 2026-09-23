@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Pattern Quest - Visual Memory Game</title>
+  <meta name="description" content="A child-friendly pattern memory game collecting cognitive behavioral data for early dyslexia screening research.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="game-wrapper">
+    <!-- Top Navigation / Global Bar -->
+    <header class="app-header">
+      <div class="logo-group">
+        <span class="logo-icon" aria-hidden="true">??</span>
+        <h1 class="logo-title">Pattern Quest</h1>
+      </div>
+      <div class="header-controls">
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <span id="soundIcon" aria-hidden="true">??</span>
+        </button>
+        <button id="restartHeaderBtn" class="icon-btn" title="Restart Game" aria-label="Restart Game" style="display: none;">
+          <span aria-hidden="true">??</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <!-- SCREEN 1: WELCOME SCREEN -->
+      <section id="welcomeScreen" class="screen active" aria-labelledby="welcomeTitle">
+        <div class="welcome-card card">
+          <div class="hero-graphic" aria-hidden="true">
+            <div class="tile-preview-grid">
+              <div class="preview-tile"></div>
+              <div class="preview-tile active-glow"></div>
+              <div class="preview-tile"></div>
+              <div class="preview-tile active-glow"></div>
+              <div class="preview-tile"></div>
+              <div class="preview-tile"></div>
+              <div class="preview-tile"></div>
+              <div class="preview-tile active-glow"></div>
+              <div class="preview-tile"></div>
+            </div>
+            <div class="mascot-star">?</div>
+          </div>
+
+          <h2 id="welcomeTitle" class="screen-title">Welcome to Pattern Quest!</h2>
+          <p class="screen-subtitle">Watch carefully and remember the pattern.</p>
+
+          <div class="instructions-pills">
+            <div class="pill">
+              <span class="pill-icon">??</span>
+              <span>1. Watch the lights</span>
+            </div>
+            <div class="pill">
+              <span class="pill-icon">??</span>
+              <span>2. Remember order</span>
+            </div>
+            <div class="pill">
+              <span class="pill-icon">??</span>
+              <span>3. Tap the tiles</span>
+            </div>
+          </div>
+
+          <div class="session-settings">
+            <label for="sessionRoundsSelect" class="settings-label">Session Length:</label>
+            <select id="sessionRoundsSelect" class="custom-select" aria-label="Select number of rounds">
+              <option value="5">5 Rounds (Quick)</option>
+              <option value="10" selected>10 Rounds (Standard)</option>
+              <option value="15">15 Rounds (In-depth)</option>
+            </select>
+          </div>
+
+          <button id="startGameBtn" class="primary-btn pulse-anim">
+            <span>Start Game</span>
+            <span class="btn-arrow" aria-hidden="true">??</span>
+          </button>
+
+          <footer class="research-disclaimer">
+            <span class="disclaimer-badge">Research Prototype</span>
+            <p>This activity records cognitive performance patterns for visual memory research. It is not a clinical medical diagnosis.</p>
+          </footer>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: GAMEPLAY SCREEN -->
+      <section id="gameScreen" class="screen" aria-label="Game board">
+        <div class="game-hud">
+          <div class="hud-left">
+            <div class="progress-info">
+              <span class="progress-label">Round</span>
+              <span id="roundCounter" class="progress-count">1 / 10</span>
+            </div>
+            <div class="progress-bar-container" role="progressbar" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1" id="roundProgressBar">
+              <div id="roundProgressFill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="hud-right">
+            <div class="level-badge" id="levelBadge" title="Current difficulty level">
+              <span class="badge-icon">?</span>
+              <span id="levelText">Level 1</span>
+              <span id="gridDimText" class="badge-sub">(3?3)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback & Instruction Banner -->
+        <div id="statusBanner" class="status-banner banner-watch" role="status" aria-live="polite">
+          <span id="statusIcon" class="status-icon">??</span>
+          <span id="statusText" class="status-text">Watch carefully...</span>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="grid-outer-wrapper">
+          <div id="gameGrid" class="game-grid grid-3x3" role="grid" aria-label="Memory tile grid">
+            <!-- Tiles dynamically generated in script.js -->
+          </div>
+        </div>
+
+        <!-- Bottom Controls / Attempt Indicator -->
+        <div class="game-footer">
+          <div id="attemptIndicator" class="attempt-indicator" title="Attempts on this round">
+            <span class="attempt-dot active"></span>
+            <span class="attempt-dot"></span>
+          </div>
+          <button id="giveUpRestartBtn" class="text-btn">Restart Game</button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: RESULTS / SUMMARY SCREEN -->
+      <section id="resultsScreen" class="screen" aria-labelledby="resultsTitle">
+        <div class="results-card card">
+          <div class="results-trophy" aria-hidden="true">??</div>
+          <h2 id="resultsTitle" class="screen-title">Pattern Quest Complete!</h2>
+          <p class="results-tagline">This game records performance patterns that can be used for further analysis.</p>
+
+          <!-- Core Summary Metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon">??</div>
+              <div class="metric-value" id="summaryAccuracy">0%</div>
+              <div class="metric-label">Accuracy</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon">?</div>
+              <div class="metric-value" id="summaryReactionTime">0.00s</div>
+              <div class="metric-label">Avg Reaction Time</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon">??</div>
+              <div class="metric-value" id="summaryCompletionTime">0.00s</div>
+              <div class="metric-label">Avg Round Time</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon">??</div>
+              <div class="metric-value" id="summaryHighestLevel">Level 1</div>
+              <div class="metric-label">Highest Level</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon">??</div>
+              <div class="metric-value" id="summaryMaxPattern">0 tiles</div>
+              <div class="metric-label">Max Pattern Length</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon">?</div>
+              <div class="metric-value" id="summaryWrongClickRate">0%</div>
+              <div class="metric-label">Wrong-Click Rate</div>
+            </div>
+          </div>
+
+          <!-- Behavioral Performance Chart / Level Summary -->
+          <div class="performance-summary-box">
+            <h3 class="box-title">?? Difficulty Performance Breakdown</h3>
+            <div id="levelBreakdownContainer" class="level-breakdown-list">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+
+          <!-- Data Export Section -->
+          <div class="export-actions">
+            <h3 class="export-title">?? Research Data Export</h3>
+            <p class="export-desc">Download session data structured for Python/pandas analysis & ML pipeline feature extraction.</p>
+            <div class="export-buttons-group">
+              <button id="downloadJsonBtn" class="export-btn btn-json">
+                <span class="btn-icon">??</span>
+                <span>Download JSON</span>
+              </button>
+              <button id="downloadCsvBtn" class="export-btn btn-csv">
+                <span class="btn-icon">??</span>
+                <span>Download CSV</span>
+              </button>
+            </div>
+            <button id="toggleDataViewBtn" class="secondary-btn">
+              <span>??? View Recorded Session Data Table</span>
+            </button>
+          </div>
+
+          <!-- Live Data Table Drawer (Toggleable) -->
+          <div id="rawDataTableContainer" class="raw-data-container" style="display: none;">
+            <div class="table-responsive">
+              <table id="rawDataTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Round</th>
+                    <th>Level</th>
+                    <th>Grid</th>
+                    <th>Length</th>
+                    <th>Result</th>
+                    <th>RT (ms)</th>
+                    <th>Total (ms)</th>
+                    <th>Mistakes</th>
+                    <th>Attempts</th>
+                  </tr>
+                </thead>
+                <tbody id="rawDataTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button id="playAgainBtn" class="primary-btn">
+              <span>Play Again</span>
+              <span aria-hidden="true">??</span>
+            </button>
+          </div>
+
+          <footer class="research-disclaimer">
+            <span class="disclaimer-badge">Ethical & Clinical Notice</span>
+            <p>This prototype does not assess or output dyslexia diagnoses or probabilities. Behavioral telemetry is designed for academic feature extraction and cognitive research pipelines.</p>
+          </footer>
+        </div>
+      </section>
+    </main>
+
+    <!-- Confirmation Modal for Restart -->
+    <div id="restartModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display: none;">
+      <div class="modal-dialog">
+        <h3 id="modalTitle" class="modal-title">Restart Game?</h3>
+        <p class="modal-text">Do you want to start over from Round 1? Current session progress will be reset.</p>
+        <div class="modal-buttons">
+          <button id="cancelRestartBtn" class="modal-btn btn-secondary">Keep Playing</button>
+          <button id="confirmRestartBtn" class="modal-btn btn-danger">Yes, Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
